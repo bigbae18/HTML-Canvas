@@ -1,11 +1,20 @@
+const mouse = { x: undefined, y: undefined}
+
+window.addEventListener('mousemove', (e) => {
+    mouse.x = e.x;
+    mouse.y = e.y;
+})
+
 class Circle {
     context;
     x;
     y;
     radius;
+    maxRadius = 90;
+    minRadius = 30;
     dx;
     dy;
-    colors = ["blue", "yellow", "green", "aqua", "darkviolet", "orange"];
+    colors = ["ff0033", "yellow", "green", "aqua", "darkviolet", "orange"];
     color;
 
     constructor(x, y, radius, dx, dy, context, colorNumber) {
@@ -26,9 +35,9 @@ class Circle {
 
         this.context.arc(this.x, this.y, this.radius, 0, Math.PI*2, false);
 
-        this.context.strokeStyle = this.color;
+        this.context.fillStyle = this.color;
 
-        this.context.stroke();
+        this.context.fill();
 
     }
 
@@ -45,8 +54,16 @@ class Circle {
         this.x += this.dx;
         this.y += this.dy;
 
+        this.scale()
         this.draw();
+    }
 
+    scale() {
+        if (mouse.x - this.x < 100 && mouse.x - this.x > -100 && mouse.y - this.y < 100 && mouse.y - this.y > -100 && this.radius < this.maxRadius) {
+            this.radius += 1;
+        } else if (this.radius > this.minRadius) {
+            this.radius -= 1
+        }
     }
 }
 
@@ -58,7 +75,7 @@ const context = canvas.getContext('2d');
 const circleArray = [];
 
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 500; i++) {
     let radius = 30;
     let x = Math.random() * (innerWidth - radius * 2) + radius;
     let y = Math.random() * (innerHeight - radius * 2) + radius;
